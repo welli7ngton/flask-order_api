@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 
 app = Flask(__name__)
 
-purchase_order = [
+purchase_orders = [
     {
         'id': 1,
         'description': 'Pedido de compra 1',
@@ -19,6 +19,11 @@ purchase_order = [
             }
         ],
     },
+    {
+        'id': 2,
+        'description': 'Pedido de compra 2',
+        'items': False
+    }
 ]
 
 
@@ -29,7 +34,15 @@ def home():
 
 @app.route('/purchase_orders')
 def get_purchase_order():
-    return jsonify(purchase_order)
+    return jsonify(purchase_orders)
+
+
+@app.route('/purchase_orders/<int:id>')
+def get_purchase_order_by_id(id):
+    for purchase_order in purchase_orders:
+        if purchase_order['id'] == id:
+            return jsonify(purchase_order)
+    return jsonify({'message': f'pedido {id} nao encontrado.'})
 
 
 app.run(port=5000)
