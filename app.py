@@ -1,6 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
+from flask_restful import Api, Resource
+
 
 app = Flask(__name__)
+api = Api(app)
 
 purchase_orders = [
     {
@@ -19,69 +22,14 @@ purchase_orders = [
             }
         ],
     },
-    {
-        'id': 2,
-        'description': 'Pedido de compra 2',
-        'items': []
-    }
 ]
 
 
-@app.route('/')
-def home():
-    return 'Hello world'
+class PurchaseOrders(Resource):
+    def get(self):
+        return jsonify(purchase_orders)
 
 
-@app.route('/purchase_orders')
-def get_purchase_order():
-    return jsonify(purchase_orders)
-
-
-@app.route('/purchase_orders/<int:id>')
-def get_purchase_order_by_id(id):
-    for purchase_order in purchase_orders:
-        if purchase_order['id'] == id:
-            return jsonify(purchase_order)
-    return jsonify({'message': f'pedido {id} nao encontrado.'})
-
-
-@app.route('/purchase_orders', methods=['POST'])
-def create_purchase_order():
-    request_data = request.get_json()
-    purchase_order = {
-        'id': request_data['id'],
-        'description': request_data['description'],
-        'items': []
-    }
-
-    purchase_orders.append(purchase_order)
-
-    return jsonify(purchase_order)
-
-
-@app.route('/purchase_orders/<int:id>/items')
-def get_purchase_items_by_id(id):
-    for po in purchase_orders:
-        if po['id'] == id:
-            return jsonify(po['items'])
-
-    return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
-
-
-@app.route('/purchase_orders/<int:id>/add_items', methods=['POST'])
-def add_items_to_purchase_order(id):
-    request_data = request.get_json()
-    for po in purchase_orders:
-        if po['id'] == id:
-            po['items'].append(
-                {
-                    'id': request_data['id'],
-                    'description': request_data['description'],
-                    'price': request_data['price']
-                }
-            )
-            return jsonify(po)
-    return jsonify({'message': f'purchase order id({id}) não encotrado.'})
-
+api.add_resource(PurchaseOrders, '/purchase_orders')
 
 app.run(port=5000)
