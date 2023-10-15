@@ -9,12 +9,12 @@ purchase_orders = [
         'items': [
             {
                 'id': 1,
-                'description': 'Item do pedido 1',
+                'description': 'Item 1 do pedido 1',
                 'price': 10.99,
             },
             {
                 'id': 2,
-                'description': 'Item do pedido 2',
+                'description': 'Item 2 do pedido 1',
                 'price': 100.99,
             }
         ],
@@ -22,7 +22,7 @@ purchase_orders = [
     {
         'id': 2,
         'description': 'Pedido de compra 2',
-        'items': False
+        'items': []
     }
 ]
 
@@ -59,13 +59,29 @@ def create_purchase_order():
     return jsonify(purchase_order)
 
 
-@app.route('/purchase_orders/<int:_id>/items')
-def get_purchase_items_by_id(_id):
+@app.route('/purchase_orders/<int:id>/items')
+def get_purchase_items_by_id(id):
     for po in purchase_orders:
-        if po['id'] == _id:
+        if po['id'] == id:
             return jsonify(po['items'])
 
-    return jsonify({'message': f'items do pedido {_id} nao encontrados.'})
+    return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
+
+
+@app.route('/purchase_orders/<int:id>/add_items', methods=['POST'])
+def add_items_to_purchase_order(id):
+    request_data = request.get_json()
+    for po in purchase_orders:
+        if po['id'] == id:
+            po['items'].append(
+                {
+                    'id': request_data['id'],
+                    'description': request_data['description'],
+                    'price': request_data['price']
+                }
+            )
+            return jsonify(po)
+    return jsonify({'message': f'purchase order id({id}) não encotrado.'})
 
 
 app.run(port=5000)
