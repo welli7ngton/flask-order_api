@@ -59,4 +59,13 @@ def create_purchase_order():
     return jsonify(purchase_order)
 
 
+@app.route('/purchase_orders/<int:_id>/items')
+def get_purchase_items_by_id(_id):
+    for po in purchase_orders:
+        if po['id'] == _id:
+            return jsonify(po['items'])
+
+    return jsonify({'message': f'items do pedido {_id} nao encontrados.'})
+
+
 app.run(port=5000)
