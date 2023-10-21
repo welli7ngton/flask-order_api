@@ -27,3 +27,11 @@ def test_post_purchase_orders(test_client):
     assert response.json['id'] == obj['id']
     assert response.json['description'] == obj['description']
     assert response.json['items'] == []
+
+
+def test_get_purchase_order_by_id(test_client):
+    response = test_client.get('/purchase_orders/1')
+
+    assert response.status_code == 200
+    assert response.json['id'] == 1
+    assert len(response.json['items']) == 2
