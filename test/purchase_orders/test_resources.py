@@ -63,3 +63,9 @@ def test_get_purchase_order_by_id(test_client):
     assert response.status_code == 200
     assert response.json['id'] == 1
     assert len(response.json['items']) == 2
+
+
+def test_get_purchase_order_by_id_not_found(test_client):
+    response = test_client.get('/purchase_orders/9999')
+
+    assert response.json['message'] == 'pedido 9999 nao encontrado.'
