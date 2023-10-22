@@ -66,6 +66,8 @@ def test_get_purchase_order_by_id(test_client):
 
 
 def test_get_purchase_order_by_id_not_found(test_client):
-    response = test_client.get('/purchase_orders/9999')
+    id = 9999
+    response = test_client.get(f'/purchase_orders/{id}')
 
-    assert response.json['message'] == 'pedido 9999 nao encontrado.'
+    assert response.status_code == 200
+    assert response.json['message'] == f'pedido {id} nao encontrado.'

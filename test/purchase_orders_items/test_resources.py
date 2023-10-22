@@ -2,12 +2,20 @@ import json
 
 
 def test_get_purchase_order_items(test_client):
-    response = test_client.get('/purchase_orders/1/items')
+    id = 1
+    response = test_client.get(f'/purchase_orders/{id}/items')
 
     assert response.status_code == 200
     assert response.json[0]['id'] == 1
-    assert response.json[0]['description'] == 'Item 1 do pedido 1'
+    assert response.json[0]['description'] == f'Item 1 do pedido {id}'
     assert len(response.json) == 2
+
+
+def test_get_purchase_orders_items_id_not_found(test_client):
+    id = 9999
+    response = test_client.get(f'/purchase_orders/{id}/items')
+
+    assert response.json['message'] == f'itens do pedido {id} nao encontrados.'
 
 
 def test_post_add_items_to_a_purchase_order(test_client):
