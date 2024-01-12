@@ -24,7 +24,7 @@ class PurchaseOrderItems(Resource):
         'price',
         type=float,
         required=True,
-        help='Verifique o preço.',
+        help='Informe um preço.',
     )
 
     def get(self, id):
