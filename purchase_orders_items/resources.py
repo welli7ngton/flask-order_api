@@ -46,4 +46,4 @@ class PurchaseOrderItems(Resource):
                     }
                 )
                 return jsonify(po)
-        return jsonify({'message': f'purchase order id({id}) não encotrado.'})
+        return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
