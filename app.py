@@ -13,3 +13,8 @@ def create_app():
     api.add_resource(PurchaseOrderItems, '/purchase_orders/<int:id>/items')
 
     return app
+
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run()
