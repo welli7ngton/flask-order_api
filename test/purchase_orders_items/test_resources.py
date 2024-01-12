@@ -32,3 +32,8 @@ def test_post_add_items_to_a_purchase_order(test_client):
     )
 
     assert response.status_code == 200
+    assert response.json['id'] == 1
+    assert len(response.json['items']) == 2
+    assert response.json['items'][1] == obj['id']
+    assert response.json['items'][1] == obj['description']
+    assert response.json['items'][1] == obj['price']
