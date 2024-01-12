@@ -1,3 +1,5 @@
+# flake8: noqa
+
 import json
 
 
@@ -37,3 +39,51 @@ def test_post_add_items_to_a_purchase_order(test_client):
     assert response.json['items'][1] == obj['id']
     assert response.json['items'][1] == obj['description']
     assert response.json['items'][1] == obj['price']
+
+
+def test_post_invalid_id(test_client):
+    obj = {
+        'description': 'teste id inválido',
+        'price': 100.0
+    }
+
+    response = test_client.post(
+        '/purchase_order_items/1/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message']['id'] == 'Informe um id válido'
+
+
+def test_post_invalid_description(test_client):
+    obj = {
+        'id': '2',
+        'price': 100.0
+    }
+
+    response = test_client.post(
+        '/purchase_order_items/1/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message']['description'] == 'Informe uma descrição válida'
+
+
+def test_post_invalid_price(test_client):
+    obj = {
+        'id': '2',
+        'description': 'item teste'
+    }
+
+    response = test_client.post(
+        '/purchase_order_items/1/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message']['price'] == 'Informe um preço válido'
