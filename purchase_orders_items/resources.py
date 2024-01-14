@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
-from purchase_object import purchase_order_obj
+# from purchase_object import purchase_order_obj
 
 
 class PurchaseOrderItems(Resource):
