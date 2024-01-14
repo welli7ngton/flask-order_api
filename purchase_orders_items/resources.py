@@ -1,17 +1,12 @@
+# flake8:noqa
 from flask import jsonify
 from flask_restful import Resource, reqparse
-# from purchase_object import purchase_order_obj
+from .model import PurchaseOrdersItemsModel
+from purchase_orders.model import PurchaseOrderModel
 
 
-class PurchaseOrderItems(Resource):
+class PurchaseOrdersItems(Resource):
     parser = reqparse.RequestParser()
-
-    parser.add_argument(
-        'id',
-        type=int,
-        required=True,
-        help='Informe um ID.',
-    )
 
     parser.add_argument(
         'description',
@@ -28,22 +23,19 @@ class PurchaseOrderItems(Resource):
     )
 
     def get(self, id):
-        for po in purchase_order_obj:
-            if po['id'] == id:
-                return jsonify(po['items'])
+        purchase_orders_items = PurchaseOrdersItemsModel.find_by_purchase_order_id(id)
 
-        return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
+        return [p.as_dict() for p in purchase_orders_items]
 
     def post(self, id):
-        request_data = PurchaseOrderItems.parser.parse_args()
-        for po in purchase_order_obj:
-            if po['id'] == id:
-                po['items'].append(
-                    {
-                        'id': request_data['id'],
-                        'description': request_data['description'],
-                        'price': request_data['price']
-                    }
-                )
-                return jsonify(po)
+        purchase_order = PurchaseOrderModel.find_by_id(id)
+        if purchase_order:
+            request_data = PurchaseOrdersItems.parser.parse_args()
+            request_data['purchase_order_id'] = id
+
+            purchase_orders_item = PurchaseOrdersItemsModel(**request_data)
+            purchase_orders_item.save()
+
+            return purchase_orders_item.as_dict()
+
         return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
