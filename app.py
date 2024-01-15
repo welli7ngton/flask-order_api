@@ -6,11 +6,15 @@ from purchase_orders_items.resources import PurchaseOrdersItems
 from db import DB
 
 
-def create_app():
+def create_app(env):
     app = Flask(__name__)
     api = Api(app)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:lyz44fpc@localhost:5432/db_api'
+    database = 'db_api'
+    if env == 'testing':
+        database = 'db_api_test'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:a@localhost:5432/{database}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     DB.init_app(app)
