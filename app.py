@@ -6,7 +6,7 @@ from purchase_orders_items.resources import PurchaseOrdersItems
 from db import DB
 
 
-def create_app(env):
+def create_app(env='development'):
     app = Flask(__name__)
     api = Api(app)
 
@@ -28,8 +28,3 @@ def create_app(env):
         DB.create_all()
 
     return app
-
-
-# if __name__ == '__main__':
-#     app = create_app('development')
-#     app.run()
