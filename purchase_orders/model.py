@@ -7,9 +7,11 @@ class PurchaseOrderModel(DB.Model):
 
     id = DB.Column(DB.Integer, primary_key=True)
     description = DB.Column(DB.String(500), nullable=False)
+    quantity = DB.Column(DB.Integer, nullable=False)
 
-    def __init__(self, description) -> None:
+    def __init__(self, description, quantity) -> None:
         self.description = description
+        self.quantity = quantity
     
     def as_dict(self):
         return {
