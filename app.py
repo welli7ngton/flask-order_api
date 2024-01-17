@@ -4,6 +4,7 @@ from flask_restful import Api
 from purchase_orders.resources import PurchaseOrders, PurchaseOrdersById
 from purchase_orders_items.resources import PurchaseOrdersItems
 from db import DB
+from flask_migrate import Migrate
 
 
 def create_app(env='development'):
@@ -18,6 +19,7 @@ def create_app(env='development'):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     DB.init_app(app)
+    Migrate(app, DB)
 
     api.add_resource(PurchaseOrders, '/purchase_orders')
     api.add_resource(PurchaseOrdersById, '/purchase_orders/<int:id>')
