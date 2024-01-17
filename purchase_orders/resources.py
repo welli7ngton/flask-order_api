@@ -1,9 +1,9 @@
-from flask import jsonify
 from flask_restful import Resource, reqparse
-from .model import PurchaseOrderModel
+from .services import PurchaseOrderSerice
 
 
 class PurchaseOrders(Resource):
+    __service__ = PurchaseOrderSerice()
     parser = reqparse.RequestParser()
 
     parser.add_argument(
@@ -13,21 +13,23 @@ class PurchaseOrders(Resource):
         help='Informe uma descrição.'
     )
 
+    parser.add_argument(
+        'quantity',
+        type=int,
+        required=True,
+        help='informe uma quantidade'
+    )
+
     def get(self):
-        purchase_orders = PurchaseOrderModel.find_all()
-        return [p.as_dict() for p in purchase_orders]
+        return self.__service__.find_all()
 
     def post(self):
         request_data = PurchaseOrders().parser.parse_args()
-        purchase_order = PurchaseOrderModel(**request_data)
-        purchase_order.save()
-
-        return purchase_order.as_dict()
+        return self.__service__.create(**request_data)
 
 
 class PurchaseOrdersById(Resource):
+    __service__ = PurchaseOrderSerice()
+
     def get(self, id):
-        purchase_order = PurchaseOrderModel.find_by_id(id)
-        if purchase_order:
-            return purchase_order.as_dict()
-        return jsonify({'message': f'pedido {id} nao encontrado.'})
+        return self.__service__.find_by_id(id)
