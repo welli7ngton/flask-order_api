@@ -1,4 +1,5 @@
 # flake8:noqa
+import os
 from flask import Flask
 from flask_restful import Api
 from purchase_orders.resources import PurchaseOrders, PurchaseOrdersById
@@ -7,15 +8,11 @@ from db import DB
 from flask_migrate import Migrate
 
 
-def create_app(env='development'):
+def create_app():
     app = Flask(__name__)
     api = Api(app)
 
-    database = 'db_api'
-    if env == 'testing':
-        database = 'db_api_test'
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://postgres:a@localhost:5432/{database}'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     DB.init_app(app)
