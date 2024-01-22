@@ -1,5 +1,6 @@
+# flake8:noqa
 import json
-
+from purchase_orders.exceptions import MaxQuantityException
 
 def test_get_purchase_orders(test_client, seed_db):
     response = test_client.get('/purchase_orders')
@@ -26,6 +27,22 @@ def test_post_purchase_orders(test_client):
     assert response.json['id'] is not None
     assert response.json['description'] == obj['description']
     assert response.json['quantity'] == obj['quantity']
+
+
+def test_post_purchase_orders_with_invalid_quantity(test_client):
+    obj = {
+        'description': 'Pedido de compra 2',
+        'quantity': 151
+    }
+
+    response = test_client.post(
+        '/purchase_orders',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'A quantidade deve ser menor igual que 150.'
 
 
 def test_post_empty_description(test_client):
