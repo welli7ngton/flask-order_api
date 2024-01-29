@@ -28,14 +28,6 @@ class PurchaseOrdersItems(Resource):
         return self.__service__.find_by_purchase_order_id(id)
 
     def post(self, id):
-        purchase_order = PurchaseOrderModel.find_by_id(id)
-        if purchase_order:
-            request_data = PurchaseOrdersItems.parser.parse_args()
-            request_data['purchase_order_id'] = id
-
-            purchase_orders_item = PurchaseOrdersItemsModel(**request_data)
-            purchase_orders_item.save()
-
-            return purchase_orders_item.as_dict()
-
-        return jsonify({'message': f'itens do pedido {id} nao encontrados.'})
+        request_data = PurchaseOrdersItems.parser.parse_args()
+        request_data['purchase_order_id'] = id
+        return self.__service__.create(**request_data)

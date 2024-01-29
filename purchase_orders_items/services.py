@@ -12,3 +12,13 @@ class PurchaseOrderItemsService:
 
             return [p.as_dict() for p in purchase_order_items]
         return jsonify({'message': f'itens do pedido {purchase_order_id} nao encontrados.'})
+    
+    def create(self, **kwargs):
+        purchase_order = PurchaseOrderModel.find_by_id(kwargs['purchase_order_id'])
+        if purchase_order:
+            purchase_order_item = PurchaseOrdersItemsModel(**kwargs)
+            purchase_order_item.save()
+
+            return purchase_order_item.as_dict()
+    
+        return jsonify({'message': f'Itens do pedido {kwargs["purchase_order_id"]} não encontrados.'})
