@@ -81,4 +81,4 @@ def test_post_purchase_order_not_found(test_client):
         content_type='application/json'
     )
 
-    assert response.json == {'message': f'itens do pedido {_id} nao encontrados.'}
+    assert response.json == {'message': f'Itens do pedido {_id} não encontrados.'}
