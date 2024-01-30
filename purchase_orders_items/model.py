@@ -9,11 +9,13 @@ class PurchaseOrdersItemsModel(DB.Model):
     description = DB.Column(DB.String(500), nullable=False)
     price = DB.Column(DB.Float(precision=2), nullable=False)
     purchase_order_id = DB.Column(DB.Integer, DB.ForeignKey('purchase_order.id'), nullable=False)
+    quantity = DB.Column(DB.Integer, DB.ForeignKey('purchase_order.id'), nullable=False)
 
-    def __init__(self, description, price, purchase_order_id) -> None:
+    def __init__(self, description, price, purchase_order_id, quantity) -> None:
         self.description = description
         self.price = price
         self.purchase_order_id = purchase_order_id
+        self.quantity = quantity
 
     def as_dict(self):
         return {
