@@ -10,6 +10,7 @@ def test_get_purchase_order_items(test_client, seed_db):
     assert response.json[0]['id'] == seed_db['items'].id
     assert response.json[0]['description'] == seed_db['items'].description
     assert response.json[0]['price'] == seed_db['items'].price
+    assert response.json[0]['quantity'] == seed_db['items'].quantity
     
 
 
@@ -23,7 +24,8 @@ def test_get_purchase_orders_items_id_not_found(test_client):
 def test_post_add_items_to_a_purchase_order(test_client, seed_db):
     obj = {
         'description': 'Novo Item',
-        'price': 10000.00
+        'price': 10000.00,
+        'quantity': 5
     }
 
     response = test_client.post(
@@ -40,7 +42,8 @@ def test_post_add_items_to_a_purchase_order(test_client, seed_db):
 
 def test_post_invalid_description(test_client, seed_db):
     obj = {
-        'price': 100.0
+        'price': 100.0,
+        'quantity': 5
     }
 
     response = test_client.post(
@@ -55,7 +58,8 @@ def test_post_invalid_description(test_client, seed_db):
 
 def test_post_invalid_price(test_client, seed_db):
     obj = {
-        'description': 'Informe um preço.'
+        'description': 'Informe um preço.',
+        'quantity': 5
     }
 
     response = test_client.post(
@@ -72,7 +76,8 @@ def test_post_purchase_order_not_found(test_client):
     obj = {
         'id': 3,
         'description': 'Novo Item',
-        'price': 10000.00
+        'price': 10000.00,
+        'quantity':5
     }
 
     response = test_client.post(
@@ -82,3 +87,34 @@ def test_post_purchase_order_not_found(test_client):
     )
 
     assert response.json == {'message': f'Itens do pedido {_id} não encontrados.'}
+
+def test_post_add_items_to_a_purchase_order_invalid_quantity(test_client, seed_db):
+    obj = {
+        'description': 'Novo Item',
+        'price': 10000.00,
+        'quantity': 30
+    }
+
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'Você somente pode adicionar mais 20 itens'
+
+def test_post_invalid_quantity(test_client, seed_db):
+    obj = {
+        'price': 100.0,
+        'description': 'teste quantidade invalida',
+    }
+
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message']['quantity'] == 'Informe uma quantidade válida.'
