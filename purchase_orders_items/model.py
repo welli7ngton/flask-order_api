@@ -9,7 +9,7 @@ class PurchaseOrdersItemsModel(DB.Model):
     description = DB.Column(DB.String(500), nullable=False)
     price = DB.Column(DB.Float(precision=2), nullable=False)
     purchase_order_id = DB.Column(DB.Integer, DB.ForeignKey('purchase_order.id'), nullable=False)
-    quantity = DB.Column(DB.Integer, DB.ForeignKey('purchase_order.id'), nullable=False)
+    quantity = DB.Column(DB.Integer, nullable=False)
 
     def __init__(self, description, price, purchase_order_id, quantity) -> None:
         self.description = description

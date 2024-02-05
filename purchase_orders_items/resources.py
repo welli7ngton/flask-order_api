@@ -24,6 +24,13 @@ class PurchaseOrdersItems(Resource):
         help='Informe um preço.',
     )
 
+    parser.add_argument(
+        'quantity',
+        type=int,
+        required=True,
+        help='Informe uma quantidade válida.',
+    )
+
     def get(self, id):
         return self.__service__.find_by_purchase_order_id(id)
 
