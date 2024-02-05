@@ -88,11 +88,11 @@ def test_post_purchase_order_not_found(test_client):
 
     assert response.json == {'message': f'Itens do pedido {_id} não encontrados.'}
 
-def test_post_add_items_to_a_purchase_order_invalid_quantity(test_client, seed_db):
+def test_post_add_items_to_a_purchase_order_maximum_quantity(test_client, seed_db):
     obj = {
         'description': 'Novo Item',
         'price': 10000.00,
-        'quantity': 30
+        'quantity': 51
     }
 
     response = test_client.post(
@@ -102,7 +102,23 @@ def test_post_add_items_to_a_purchase_order_invalid_quantity(test_client, seed_d
     )
 
     assert response.status_code == 400
-    assert response.json['message'] == 'Você somente pode adicionar mais 20 itens'
+    assert response.json['message'] == 'Maximum quantity reached.'
+
+def test_post_add_items_to_a_purchase_order_minimum_quantity(test_client, seed_db):
+    obj = {
+        'description': 'Novo Item',
+        'price': 10000.00,
+        'quantity': 4
+    }
+
+    response = test_client.post(
+        f'/purchase_orders/{seed_db["purchase_order"].id}/items',
+        data=json.dumps(obj),
+        content_type='application/json'
+    )
+
+    assert response.status_code == 400
+    assert response.json['message'] == 'Minimum quantity not reached.'
 
 def test_post_invalid_quantity(test_client, seed_db):
     obj = {

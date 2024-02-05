@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     api = Api(app)
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI']
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DB_URI_TEST']
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     DB.init_app(app)
