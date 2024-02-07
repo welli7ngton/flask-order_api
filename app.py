@@ -20,6 +20,8 @@ def create_app():
     DB.init_app(app)
     Migrate(app, DB)
 
+    JWTManager(app)
+
     api.add_resource(PurchaseOrders, '/purchase_orders')
     api.add_resource(PurchaseOrdersById, '/purchase_orders/<int:id>')
     api.add_resource(PurchaseOrdersItems, '/purchase_orders/<int:id>/items')
