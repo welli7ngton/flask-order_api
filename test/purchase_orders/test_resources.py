@@ -2,8 +2,8 @@
 import json
 from purchase_orders.exceptions import MaxQuantityException
 
-def test_get_purchase_orders(test_client, seed_db):
-    response = test_client.get('/purchase_orders')
+def test_get_purchase_orders(test_client, get_headers, seed_db):
+    response = test_client.get('/purchase_orders', headers=get_headers)
 
     assert response.status_code == 200
     assert response.json[0]['id'] == seed_db.id
@@ -11,7 +11,7 @@ def test_get_purchase_orders(test_client, seed_db):
     assert response.json[0]['quantity'] == seed_db.quantity
 
 
-def test_post_purchase_orders(test_client):
+def test_post_purchase_orders(test_client, get_headers):
     obj = {
         'description': 'Pedido de compra 2',
         'quantity': 150
@@ -20,7 +20,8 @@ def test_post_purchase_orders(test_client):
     response = test_client.post(
         '/purchase_orders',
         data=json.dumps(obj),
-        content_type='application/json'
+        content_type='application/json',
+        headers=get_headers
     )
 
     assert response.status_code == 200

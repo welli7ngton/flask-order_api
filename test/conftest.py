@@ -1,5 +1,12 @@
 import pytest
 from app import create_app
+from flask_jwt_extended import create_access_token
+
+
+@pytest.fixture(scope='module')
+def get_headers():
+    token = create_access_token(identity='user_test')
+    return {'Autorization': f'Bearer {token}'}
 
 
 @pytest.fixture(scope='module')
