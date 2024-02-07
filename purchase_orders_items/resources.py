@@ -4,6 +4,7 @@ from flask_restful import Resource, reqparse
 from .model import PurchaseOrdersItemsModel
 from purchase_orders.model import PurchaseOrderModel
 from .services import PurchaseOrderItemsService
+from flask_jwt_extended import jwt_required
 
 
 class PurchaseOrdersItems(Resource):
@@ -31,9 +32,11 @@ class PurchaseOrdersItems(Resource):
         help='Informe uma quantidade válida.',
     )
 
+    @jwt_required()
     def get(self, id):
         return self.__service__.find_by_purchase_order_id(id)
 
+    @jwt_required()
     def post(self, id):
         request_data = PurchaseOrdersItems.parser.parse_args()
         request_data['purchase_order_id'] = id
